@@ -664,7 +664,27 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
+        pyright = {
+          before_init = function(_, config)
+            local function get_python_path(workspace)
+              if workspace then
+                local uv_path = vim.fs.joinpath(workspace, '.venv', 'bin', 'python')
+                print(uv_path)
+                if vim.loop.fs_stat(uv_path) then
+                  return uv_path
+                end
+              end
+              if vim.env.VIRTUAL_ENV then
+                return vim.fs.joinpath(vim.env.VIRTUAL_ENV, 'bin', 'python')
+              end
+              return vim.fn.exepath 'python3' or vim.fn.exepath 'python' or 'python'
+            end
+            if not config.settings.python then
+              config.settings.python = {}
+            end
+            config.settings.python.pythonPath = get_python_path(config.root_dir)
+          end,
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
