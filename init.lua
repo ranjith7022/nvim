@@ -108,14 +108,41 @@ vim.opt.mouse = 'a'
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
-
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+-- vim.schedule(function()
+--   vim.o.clipboard = 'unnamedplus'
+-- end)
+-- ~/.config/nvim/init.lua
+
+-- Your existing configuration...
+
+-- Custom clipboard configuration for WSL
+vim.g.clipboard = {
+  name = 'WslClipboard',
+  copy = {
+    ['+'] = 'clip.exe',
+    ['*'] = 'clip.exe',
+  },
+  paste = {
+    ['+'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+    ['*'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+  },
+  cache_enabled = 0,
+}
+
+-- Ensure Neovim uses this custom clipboard
+-- This line is usually sufficient if the custom 'g:clipboard' is defined.
+-- However, explicitly setting it can be a good habit.
+vim.opt.clipboard = 'unnamedplus' -- For the '+' register
+vim.opt.clipboard:append 'unnamed' -- For the '*' register (if you want both)
+
+-- Or simply:
+-- vim.opt.clipboard = 'unnamedplus,unnamed'
+
+-- Your other configurations...
 
 -- Enable break indent
 vim.opt.breakindent = true
