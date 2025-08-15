@@ -118,27 +118,38 @@ vim.opt.showmode = false
 -- ~/.config/nvim/init.lua
 
 -- Your existing configuration...
-
+-- vim.g.clipboard = {
+--   name = 'win32yank-wsl',
+--   copy = {
+--     ['+'] = 'win32yank.exe -i --crlf',
+--     ['*'] = 'win32yank.exe -i --crlf',
+--   },
+--   paste = {
+--     ['+'] = 'win32yank.exe -o --lf',
+--     ['*'] = 'win32yank.exe -o --lf',
+--   },
+--   cache_enabled = 1,
+-- }
 -- Custom clipboard configuration for WSL
-vim.g.clipboard = {
-  name = 'WslClipboard',
-  copy = {
-    ['+'] = 'clip.exe',
-    ['*'] = 'clip.exe',
-  },
-  paste = {
-    ['+'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-    ['*'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-  },
-  cache_enabled = 0,
-}
+-- vim.g.clipboard = {
+--   name = 'WslClipboard',
+--   copy = {
+--     ['+'] = 'clip.exe',
+--     ['*'] = 'clip.exe',
+--   },
+--   paste = {
+--     ['+'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+--     ['*'] = 'powershell.exe -NoLogo -NoProfile -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+--   },
+--   cache_enabled = 0,
+-- }
 
 -- Ensure Neovim uses this custom clipboard
 -- This line is usually sufficient if the custom 'g:clipboard' is defined.
 -- However, explicitly setting it can be a good habit.
 vim.opt.clipboard = 'unnamedplus' -- For the '+' register
-vim.opt.clipboard:append 'unnamed' -- For the '*' register (if you want both)
-
+-- vim.opt.clipboard:append 'unnamed' -- For the '*' register (if you want both)
+--
 -- Or simply:
 -- vim.opt.clipboard = 'unnamedplus,unnamed'
 
@@ -743,7 +754,9 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
+        -- 'tinymist',
+        -- Used to format Lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
